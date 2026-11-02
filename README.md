@@ -1,0 +1,2 @@
+# EquipmentManagementSystem_Client
+備品管理システムのフロントエンドのソースを管理する
