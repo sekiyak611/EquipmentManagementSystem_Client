@@ -1,0 +1,39 @@
+# Git で管理しないもの（CLAUDE.md 7章、Client の CLAUDE.md 4章）。
+# 公開してはいけないもの・各自のPCだけのもの・作られるものを入れる。足したら CLAUDE.md 4章の表も直す。
+
+# npm が入れる部品
+/node_modules/
+
+# 組み立てた画面
+/dist/
+
+# Playwright が作るもの（証跡は Document に写す）
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# 秘密の値を書くことがある Vite の各自の設定
+.env.local
+.env.*.local
+
+# ログ
+*.log
+npm-debug.log*
+
+# Eclipse・エディタの各自の設定
+/.project
+/.settings/
+/.vscode/
+/.idea/
+
+# Claude Code が成果物の zip を置く場所
+/output/
+
+# Claude Code の各自の設定（共有する .claude/settings.json は管理する）
+/.claude/settings.local.json
+
+# OS が作るもの
+Thumbs.db
+desktop.ini
+.DS_Store
