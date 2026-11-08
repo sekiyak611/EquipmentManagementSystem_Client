@@ -27,7 +27,7 @@ npm-debug.log*
 /.vscode/
 /.idea/
 
-# Claude Code が成果物の zip を置く場所
+# Claude Code の作業記録（作業メモなど）を置く場所
 /output/
 
 # Claude Code の各自の設定（共有する .claude/settings.json は管理する）
