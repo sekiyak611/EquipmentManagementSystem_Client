@@ -14,7 +14,7 @@
 ## 2. このリポジトリだけの決まり
 
 - フォルダの分け方は、共通の決まりの 4.3 のとおり（このリポジトリのいちばん上が、4.3 の EquipmentManagementSystem_Client/）。
-- 共通の決まりの中の「frontend」「frontend/」は、このリポジトリのこと。
+- skill の名前の「frontend」（frontend-impl・frontend-test・frontend-review）は、このリポジトリの作業に使うもの（共通の決まり 4.4）。
 - 画面のテスト（Playwright）では、Server も動かして確かめる（Server は同じフォルダに並んだ EquipmentManagementSystem_Server にある）。
 
 ## 3. よく使うコマンド
