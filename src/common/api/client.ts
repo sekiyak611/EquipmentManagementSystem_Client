@@ -47,7 +47,7 @@ export class ApiError extends Error {
   }
 }
 
-/** 401（ログインしていない）のときに呼ぶ処理。main.tsx で、ログイン画面に移す処理を入れる */
+/** 401（ログインしていない）のときに呼ぶ処理。common/auth の AuthProvider が、ログイン画面に移す処理を入れる（common.md 11.9） */
 let unauthorizedHandler: () => void = () => {};
 
 export function setUnauthorizedHandler(handler: () => void): void {
@@ -76,7 +76,16 @@ async function ensureXsrfToken(): Promise<string | null> {
   return readXsrfToken();
 }
 
-async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+/** 呼び出しごとの指定 */
+export type RequestOptions = {
+  /**
+   * false にすると、401 のときにログイン画面へ移さない（エラーを投げるだけ）。最初は true。
+   * 使ってよいのは、ログインしているかを確かめるだけの呼び出し（A-03）と、ログアウト（A-02）だけ（common.md 11.3）
+   */
+  redirectOnUnauthorized?: boolean;
+};
+
+async function request<T>(method: string, path: string, body?: unknown, options?: RequestOptions): Promise<T> {
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (method !== 'GET') {
     const token = await ensureXsrfToken();
@@ -93,7 +102,13 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     payload = JSON.stringify(body);
   }
 
-  const response = await fetch(path, { method, headers, body: payload, credentials: 'same-origin' });
+  let response: Response;
+  try {
+    response = await fetch(path, { method, headers, body: payload, credentials: 'same-origin' });
+  } catch {
+    // つながらない（スマートフォンが圏外、サーバーが止まっている、など）。status は 0 にする
+    throw new ApiError(0, UNREADABLE_MESSAGE, null);
+  }
 
   let json: ApiResponse<T> | null = null;
   try {
@@ -102,7 +117,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     json = null;
   }
 
-  if (response.status === 401) {
+  if (response.status === 401 && options?.redirectOnUnauthorized !== false) {
     unauthorizedHandler();
   }
   if (!json || typeof json.status !== 'number') {
@@ -116,13 +131,13 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
 }
 
 /** 読む（GET） */
-export function apiGet<T>(path: string): Promise<T> {
-  return request<T>('GET', path);
+export function apiGet<T>(path: string, options?: RequestOptions): Promise<T> {
+  return request<T>('GET', path, undefined, options);
 }
 
 /** 作る・実行する（POST） */
-export function apiPost<T>(path: string, body?: unknown): Promise<T> {
-  return request<T>('POST', path, body);
+export function apiPost<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  return request<T>('POST', path, body, options);
 }
 
 /** 変える（PUT） */

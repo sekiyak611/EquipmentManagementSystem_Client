@@ -14,8 +14,8 @@ test('POST に CSRF の合言葉が付く（クッキーがないところから
   // まだ合言葉のクッキーがない
   expect((await context.cookies()).find((c) => c.name === 'XSRF-TOKEN')).toBeUndefined();
   await page.getByRole('button', { name: 'POSTを送る' }).click();
-  // A-01（ログイン）はまだないので 404。合言葉が通らなければ 403 になる
-  await expect(page.getByTestId('api-result')).toHaveText('エラー 404');
+  // 合言葉が通らなければ 403 になる。通れば A-01（ログイン）の入力チェックまで進み、空の値なので 400 になる
+  await expect(page.getByTestId('api-result')).toHaveText('エラー 400');
   expect((await context.cookies()).find((c) => c.name === 'XSRF-TOKEN')).toBeDefined();
 });
 

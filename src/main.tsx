@@ -5,22 +5,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { setUnauthorizedHandler } from './common/api/client';
 import { MessageProvider } from './common/components/MessageProvider';
 import { theme } from './common/theme/theme';
 import { routes } from './routes';
 
 const router = createBrowserRouter(routes);
 
-// ログインしていない（401）ときは、ログイン画面に移す。
-// ログインしたあとに、最初に開こうとした画面に戻れるよう、今のアドレスを付ける（画面設計 1.4）
-setUnauthorizedHandler(() => {
-  const { pathname, search } = router.state.location;
-  if (pathname === '/login') {
-    return;
-  }
-  void router.navigate(`/login?redirect=${encodeURIComponent(pathname + search)}`);
-});
+// ログインしていない（401）ときにログイン画面へ移す処理は、common/auth の AuthProvider が入れる（common.md 11.9）
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
