@@ -78,6 +78,8 @@ test('つながらないときは、赤の帯に「問題が発生しました�
   await expect(page.getByRole('alert')).toHaveText(
     '問題が発生しました。時間をおいて、もう一度お試しください。続く場合は総務に連絡してください。',
   );
+  // つながらないときは、パスワードの欄を空にしない（打ち直しにならないように）
+  await expect(page.getByLabel('パスワード', { exact: true })).toHaveValue(DEV_PASSWORD);
 });
 
 test('「ログイン」を2回続けて押しても、ログインの API は1回だけ呼ぶ', async ({ page }) => {
@@ -102,6 +104,14 @@ test('パスワードが違うと、赤の帯に「メールアドレスまた�
   await expect(page.getByRole('alert')).toHaveText('メールアドレスまたはパスワードが違います');
   await expect(page).toHaveURL('/login');
   await expect(page.getByTestId('header-user')).toHaveCount(0);
+});
+
+test('ログインできなかったときは、パスワードの欄を空にする。メールアドレスは残す', async ({ page }) => {
+  await page.goto('/login');
+  await fillAndLogin(page, DEV_USERS.soumu.email, 'wrong-password');
+  await expect(page.getByRole('alert')).toHaveText('メールアドレスまたはパスワードが違います');
+  await expect(page.getByLabel('パスワード', { exact: true })).toHaveValue('');
+  await expect(page.getByLabel('メールアドレス')).toHaveValue(DEV_USERS.soumu.email);
 });
 
 test('登録のないメールアドレスでも、同じ文', async ({ page }) => {
