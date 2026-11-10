@@ -1,7 +1,10 @@
 // 全画面の枠とヘッダー（画面設計 1.1、詳細設計 common.md 11.4・11.7）
 import { expect, test } from '@playwright/test';
+import { loginAs } from '../support/login';
 
 test('ヘッダーに「備品管理」が出て、押すとトップに戻る', async ({ page }) => {
+  // トップはログインが要る画面なので、先にログインする（ZPOP-103）
+  await loginAs(page, 'soumu');
   await page.goto('/no-such-page');
   const title = page.getByRole('banner').getByRole('link', { name: '備品管理' });
   await expect(title).toBeVisible();
