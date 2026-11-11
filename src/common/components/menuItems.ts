@@ -15,4 +15,6 @@ export type MenuItemDef = {
   permission: string | null;
 };
 
-export const MENU_ITEMS: MenuItemDef[] = [];
+export const MENU_ITEMS: MenuItemDef[] = [
+  { label: '種別管理', path: '/categories', permission: 'CATEGORY_MANAGE' },
+];

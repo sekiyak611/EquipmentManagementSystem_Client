@@ -6,6 +6,7 @@ import { AppLayout } from './common/components/AppLayout';
 import { NotFoundPage } from './common/components/NotFoundPage';
 import { TopPlaceholderPage } from './common/components/TopPlaceholderPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
+import { CategoryListPage } from './features/category/pages/CategoryListPage';
 
 /** 開発とテストのときだけ開ける画面（npm run build で組み立てた画面には入らない。common.md 11.7） */
 const devRoutes: RouteObject[] = import.meta.env.DEV
@@ -30,6 +31,7 @@ export const routes: RouteObject[] = [
         children: [
           // 仮のトップ画面。S-05・S-07 ができたら、ログイン後の最初の画面（A-03 の homePage）に置き換える
           { index: true, Component: TopPlaceholderPage },
+          { path: 'categories', Component: CategoryListPage },
         ],
       },
       ...devRoutes,
