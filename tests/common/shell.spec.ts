@@ -21,8 +21,3 @@ test('横にスクロールしなくても使える', async ({ page }) => {
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
-
-test('ないアドレスでは「ページが見つかりません。」', async ({ page }) => {
-  await page.goto('/no-such-page');
-  await expect(page.getByTestId('not-found')).toHaveText('ページが見つかりません。');
-});

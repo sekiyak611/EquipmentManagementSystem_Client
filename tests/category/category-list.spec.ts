@@ -286,7 +286,7 @@ test.describe('S-13 種別管理：権限とメニュー', () => {
       }
     });
     await page.goto('/categories');
-    await expect(page.getByTestId('no-permission')).toHaveText('このページを見る権限がありません。');
+    await expect(page.getByTestId('error-page')).toHaveText('このページを見る権限がありません。');
     await expect(page.getByTestId('category-table')).toHaveCount(0);
     // 一覧（K-01）は読まない
     expect(listed).toBe(false);

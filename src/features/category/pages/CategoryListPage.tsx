@@ -1,16 +1,16 @@
 // S-13 種別管理（画面設計 16章、詳細設計 category/S-13_種別管理.md）。PCで使う画面（画面一覧 7章）
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router';
 import { ApiError } from '../../../common/api/client';
 import { useApi } from '../../../common/api/useApi';
 import { useAuth } from '../../../common/auth/AuthProvider';
 import { hasPermission } from '../../../common/auth/permissions';
 import { ConfirmDialog } from '../../../common/components/ConfirmDialog';
+import { ApiErrorPage, ErrorPage } from '../../../common/components/ErrorPage';
 import { useMessage } from '../../../common/components/MessageProvider';
 import { deleteCategory, getCategories } from '../api';
 import { CategoryFormDialog } from '../components/CategoryFormDialog';
@@ -23,16 +23,8 @@ const CATEGORY_MANAGE = 'CATEGORY_MANAGE';
 export function CategoryListPage() {
   const { me } = useAuth();
   if (!hasPermission(me, CATEGORY_MANAGE)) {
-    // 権限がない人には、エラー画面（S-19）の文を出す。S-19（ZPOP-121）ができたら置き換える（詳細設計 S-13 の10章 No.2）。
-    // 一覧（K-01）は読まない
-    return (
-      <Stack spacing={2} sx={{ mt: 2, alignItems: 'flex-start' }}>
-        <Typography data-testid="no-permission">このページを見る権限がありません。</Typography>
-        <Button variant="contained" component={Link} to="/">
-          最初の画面へ
-        </Button>
-      </Stack>
-    );
+    // 権限がない人には、エラー画面（S-19。権限がない）を出す。一覧（K-01）は読まない（詳細設計 S-13 の6章）
+    return <ErrorPage kind="forbidden" />;
   }
   return <CategoryList />;
 }
@@ -92,13 +84,12 @@ function CategoryList() {
     }
   };
 
-  // 読み込みに失敗したら、赤の帯に出す（画面設計 1.2）。表は出さない。401 は common/api がログイン画面に移す
-  useEffect(() => {
-    if (error && error.status !== 401) {
-      message.error(error.message);
-    }
-    // message は変わらない部品（useMemo）なので、実際には error が変わったときだけ動く
-  }, [error, message]);
+
+  // 画面を開いて読み込むのに失敗したら、S-19 を出す（common.md 11.10。2026-11-11 に人が決めた）。
+  // 操作のあとの読み直しが失敗したときも同じ
+  if (error) {
+    return <ApiErrorPage error={error} />;
+  }
 
   return (
     <Stack spacing={2} sx={{ mt: 2 }}>
