@@ -14,22 +14,16 @@ import { useMessage } from '../../../common/components/MessageProvider';
 import { SubmitButton } from '../../../common/components/SubmitButton';
 import { login } from '../api';
 import { PasswordField } from '../components/PasswordField';
-
-/** メールアドレスの文字数の上限（画面設計 2章） */
-const EMAIL_MAX_LENGTH = 254;
-
-/** メールアドレスの形：@ の前後に文字があり、@ の後ろに「.」があり、空白がない */
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { validateEmail } from '../validation';
 
 type FieldErrors = { email?: string; password?: string };
 
 /** 入力チェック（画面設計 2章。メッセージは画面設計の文のまま） */
 function validate(email: string, password: string): FieldErrors {
   const errors: FieldErrors = {};
-  if (email.trim() === '') {
-    errors.email = 'メールアドレスを入力してください';
-  } else if (email.length > EMAIL_MAX_LENGTH || !EMAIL_PATTERN.test(email)) {
-    errors.email = 'メールアドレスの形が正しくありません';
+  const emailError = validateEmail(email);
+  if (emailError) {
+    errors.email = emailError;
   }
   if (password === '') {
     errors.password = 'パスワードを入力してください';
