@@ -1,4 +1,4 @@
-// 種別の追加・変更のダイアログ（画面設計 16章、詳細設計 category/S-13_種別管理.md 3〜5章・9章）。
+// 種別の追加・変更のダイアログ（画面設計 16章、詳細設計 equipment/category/S-13_種別管理.md 3〜5章・9章）。
 // 開くたびに作り直す（呼ぶ側が key を変える）ので、入力欄の最初の値は開いたときの種別から決まる。
 import { useState, type FormEvent } from 'react';
 import Button from '@mui/material/Button';
@@ -8,8 +8,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { ApiError } from '../../../common/api/client';
-import { SubmitButton } from '../../../common/components/SubmitButton';
+import { ApiError } from '../../../../common/api/client';
+import { SubmitButton } from '../../../../common/components/SubmitButton';
 import { createCategory, updateCategory } from '../api';
 import type { CategoryResponse } from '../types';
 

@@ -1,4 +1,4 @@
-// 種別の一覧の表（画面設計 16章、詳細設計 category/S-13_種別管理.md 3章）
+// 種別の一覧の表（画面設計 16章、詳細設計 equipment/category/S-13_種別管理.md 3章）
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { orDash } from '../../../common/format/format';
+import { orDash } from '../../../../common/format/format';
 import type { CategoryResponse } from '../types';
 
 /** 使っている備品があって消せないときの文（画面設計 16章） */

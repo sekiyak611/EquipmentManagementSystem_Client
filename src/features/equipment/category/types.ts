@@ -1,4 +1,4 @@
-// category の API で受け渡す値の型（API設計 3.6、詳細設計 category/K-01〜K-04。Server の dto.category と同じ名前と形）
+// category の API で受け渡す値の型（API設計 3.6、詳細設計 equipment/category/K-01〜K-04。形は Server の api.equipment.category の受け取る値・返す値と同じ。名前は中身が分かる名前にする。CLAUDE.md 5章の命名規則）
 
 /** 種別の1件（K-01 の data の1件。K-02・K-03 の data） */
 export type CategoryResponse = {

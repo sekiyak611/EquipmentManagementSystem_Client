@@ -6,7 +6,7 @@ import { AppLayout } from './common/components/AppLayout';
 import { ErrorPage, RouteErrorPage } from './common/components/ErrorPage';
 import { TopPlaceholderPage } from './common/components/TopPlaceholderPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
-import { CategoryListPage } from './features/category/pages/CategoryListPage';
+import { CategoryListPage } from './features/equipment/category/pages/CategoryListPage';
 
 /** 開発とテストのときだけ開ける画面（npm run build で組み立てた画面には入らない。common.md 11.7） */
 const devRoutes: RouteObject[] = import.meta.env.DEV
