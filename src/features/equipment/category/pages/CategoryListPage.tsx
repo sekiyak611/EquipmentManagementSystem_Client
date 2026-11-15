@@ -1,17 +1,17 @@
-// S-13 種別管理（画面設計 16章、詳細設計 category/S-13_種別管理.md）。PCで使う画面（画面一覧 7章）
+// S-13 種別管理（画面設計 16章、詳細設計 equipment/category/S-13_種別管理.md）。PCで使う画面（画面一覧 7章）
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ApiError } from '../../../common/api/client';
-import { useApi } from '../../../common/api/useApi';
-import { useAuth } from '../../../common/auth/AuthProvider';
-import { hasPermission } from '../../../common/auth/permissions';
-import { ConfirmDialog } from '../../../common/components/ConfirmDialog';
-import { ApiErrorPage, ErrorPage } from '../../../common/components/ErrorPage';
-import { useMessage } from '../../../common/components/MessageProvider';
+import { ApiError } from '../../../../common/api/client';
+import { useApi } from '../../../../common/api/useApi';
+import { useAuth } from '../../../../common/auth/AuthProvider';
+import { hasPermission } from '../../../../common/auth/permissions';
+import { ConfirmDialog } from '../../../../common/components/ConfirmDialog';
+import { ApiErrorPage, ErrorPage } from '../../../../common/components/ErrorPage';
+import { useMessage } from '../../../../common/components/MessageProvider';
 import { deleteCategory, getCategories } from '../api';
 import { CategoryFormDialog } from '../components/CategoryFormDialog';
 import { CategoryTable } from '../components/CategoryTable';

@@ -1,5 +1,5 @@
-// category の API の呼び出し（詳細設計 category/S-13_種別管理.md 7章）
-import { apiDelete, apiGet, apiPost, apiPut } from '../../common/api/client';
+// category の API の呼び出し（詳細設計 equipment/category/S-13_種別管理.md 7章）
+import { apiDelete, apiGet, apiPost, apiPut } from '../../../common/api/client';
 import type { CategoryCreateRequest, CategoryResponse, CategoryUpdateRequest } from './types';
 
 /** K-01 種別の一覧（並び順はサーバーが決める） */

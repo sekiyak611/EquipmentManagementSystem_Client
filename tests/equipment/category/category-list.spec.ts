@@ -1,8 +1,8 @@
-// S-13 種別管理の画面のテスト（画面設計 16章、詳細設計 category/S-13_種別管理.md、テスト方針 5章）。
+// S-13 種別管理の画面のテスト（画面設計 16章、詳細設計 equipment/category/S-13_種別管理.md、テスト方針 5章）。
 // S-13 はPCだけの画面（画面一覧 7章）なので、メニューのテスト以外はPCの大きさだけで動かす（common.md 11.7）。
 // 最初のデータの種別（ID 1〜6。Server の V2）は変えない。テストで作った種別は、各テストのあとで消す。
 import { expect, test, type Page } from '@playwright/test';
-import { loginAs } from '../support/login';
+import { loginAs } from '../../support/login';
 
 /** 最初のデータの種別（Server の V2。K-01 が返す順） */
 const SEED = [
