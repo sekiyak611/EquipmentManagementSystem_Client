@@ -6,6 +6,7 @@ import { AppLayout } from './common/components/AppLayout';
 import { ErrorPage, RouteErrorPage } from './common/components/ErrorPage';
 import { TopPlaceholderPage } from './common/components/TopPlaceholderPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
+import { PasswordResetRequestPage } from './features/auth/pages/PasswordResetRequestPage';
 import { CategoryListPage } from './features/equipment/category/pages/CategoryListPage';
 
 /** 開発とテストのときだけ開ける画面（npm run build で組み立てた画面には入らない。common.md 11.7） */
@@ -34,6 +35,7 @@ export const routes: RouteObject[] = [
         children: [
           // ログイン前に開ける画面
           { path: 'login', Component: LoginPage },
+          { path: 'password-reset', Component: PasswordResetRequestPage },
           // ログインが要る画面（ログインしていなければ /login?redirect=… に移る。画面設計 1.4）
           {
             Component: RequireLogin,

@@ -8,3 +8,8 @@ export type LoginRequest = {
   /** ログインしたままにする（60日間）。今は送るだけ（ZPOP-125） */
   rememberMe: boolean;
 };
+
+/** A-04 パスワード設定用のリンクの依頼で送る値（API設計 4.3） */
+export type PasswordResetRequest = {
+  email: string;
+};
