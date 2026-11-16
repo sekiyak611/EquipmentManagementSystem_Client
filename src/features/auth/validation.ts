@@ -1,6 +1,6 @@
 // auth の画面で共通の入力チェック（詳細設計 auth/S-02_パスワード再設定の依頼.md の2.2・10章 No.7、auth/S-03_パスワード設定.md の4章）。
 // メールアドレスのチェックは、もとは S-01（LoginPage.tsx）の中にあった（S-01・S-02 で使う）。
-// 新しいパスワードのチェックは S-03・S-04 で使う。
+// 新しいパスワードのチェックは S-03・S-04 で使う。現在のパスワードのチェックは S-04（auth/S-04_パスワード変更.md の4章）。
 
 /** メールアドレスの文字数の上限（画面設計 2章・5章） */
 const EMAIL_MAX_LENGTH = 254;
@@ -70,4 +70,17 @@ export function checkPasswordRules(password: string): PasswordRuleChecks {
     length: password.length >= PASSWORD_MIN_LENGTH && password.length <= PASSWORD_MAX_LENGTH,
     characters: isAllowedCharacters(password),
   };
+}
+
+/** 現在のパスワードの入力チェック（画面設計 7章）。空なら画面設計のメッセージ。合っているかは、サーバーだけが確かめる */
+export function validateCurrentPassword(currentPassword: string): string | undefined {
+  return currentPassword === '' ? '現在のパスワードを入力してください' : undefined;
+}
+
+/**
+ * 新しいパスワードが、現在のパスワードと同じでないかのチェック（画面設計 7章。詳細設計 S-04 の10章 No.3）。
+ * 現在のパスワードが空のときは、確かめない（「現在のパスワードを入力してください」を出すため）。
+ */
+export function validatePasswordDiffers(currentPassword: string, password: string): string | undefined {
+  return currentPassword !== '' && currentPassword === password ? '現在と同じパスワードは使えません' : undefined;
 }

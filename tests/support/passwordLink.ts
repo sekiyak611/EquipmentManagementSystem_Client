@@ -2,6 +2,7 @@
 // テストのとき、Server に用意してある API（POST・DELETE /api/test-support/password-links。詳細設計 common.md 3.14）を呼ぶ。
 // 5分に1回の決まり（A-04）や、DM を経由せずに、S-03 などを確かめるために使う。本番・開発では動かない。
 import type { APIRequestContext } from '@playwright/test';
+import { DEV_PASSWORD } from './login';
 
 /** リンクの用途（Server の PasswordLinkPurpose） */
 export type PasswordLinkPurpose = 'RESET' | 'REGISTER' | 'LOCK';
@@ -34,4 +35,24 @@ export async function issuePasswordLink(
   }
   const json = (await response.json()) as { data: IssuedLink };
   return json.data;
+}
+
+/**
+ * 開発用のユーザのパスワードを、もとの（DEV_PASSWORD）に戻す。ロックされていれば解除し、失敗の回数も 0 に戻る。
+ * パスワードを変える・ロックするテストが、終わったあとに使う（ほかのテストが、開発用のユーザでログインできるように）。
+ * 再設定のリンクを作り、A-06 を呼ぶ（Server のテスト用 API と、本物の A-06 を使う）。
+ */
+export async function restoreDevPassword(request: APIRequestContext, email: string): Promise<void> {
+  const { token } = await issuePasswordLink(request, email, 'RESET');
+  // A-06 は POST なので、なりすまし対策の合言葉（XSRF-TOKEN）が要る。GET /api/health で受け取る
+  await request.get('/api/health');
+  const state = await request.storageState();
+  const xsrf = state.cookies.find((cookie) => cookie.name === 'XSRF-TOKEN')?.value ?? '';
+  const response = await request.post('/api/auth/password-tokens/use', {
+    headers: { 'X-XSRF-TOKEN': xsrf },
+    data: { token, password: DEV_PASSWORD, passwordConfirm: DEV_PASSWORD },
+  });
+  if (!response.ok()) {
+    throw new Error(`開発用のパスワードに戻せませんでした（${response.status()}）`);
+  }
 }

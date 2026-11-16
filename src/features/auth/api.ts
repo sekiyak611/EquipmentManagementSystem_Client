@@ -1,8 +1,9 @@
-// auth の API の呼び出し（詳細設計 auth/S-01_ログイン.md・S-02_パスワード再設定の依頼.md・S-03_パスワード設定.md の7章）
-import { apiPost } from '../../common/api/client';
+// auth の API の呼び出し（詳細設計 auth/S-01_ログイン.md・S-02_パスワード再設定の依頼.md・S-03_パスワード設定.md・S-04_パスワード変更.md の7章）
+import { apiPost, apiPut } from '../../common/api/client';
 import type { MeResponse } from '../../common/auth/types';
 import type {
   LoginRequest,
+  PasswordChangeRequest,
   PasswordResetRequest,
   PasswordTokenUseRequest,
   PasswordTokenVerifyRequest,
@@ -34,4 +35,12 @@ export function verifyPasswordToken(request: PasswordTokenVerifyRequest): Promis
 /** A-06 合言葉でパスワードを決める。成功しても、ログインはさせない（返す値はない） */
 export function setPasswordWithToken(request: PasswordTokenUseRequest): Promise<null> {
   return apiPost<null>('/api/auth/password-tokens/use', request);
+}
+
+/**
+ * A-07 自分のパスワード変更。成功すると、この端末のログインは新しくなる（ほかの端末は切れる）。返す値はない。
+ * 現在のパスワードが違うときは 400（入力欄 currentPassword のエラー）。5回続けて間違えると、ロックされ、この端末もログアウトする
+ */
+export function changePassword(request: PasswordChangeRequest): Promise<null> {
+  return apiPut<null>('/api/me/password', request);
 }

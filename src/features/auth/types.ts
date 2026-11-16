@@ -35,3 +35,10 @@ export type PasswordTokenUseRequest = {
   password: string;
   passwordConfirm: string;
 };
+
+/** A-07 自分のパスワード変更で送る値（詳細設計 auth/A-07_自分のパスワード変更.md の2.3） */
+export type PasswordChangeRequest = {
+  currentPassword: string;
+  password: string;
+  passwordConfirm: string;
+};
