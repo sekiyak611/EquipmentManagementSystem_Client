@@ -6,6 +6,7 @@ import { AppLayout } from './common/components/AppLayout';
 import { ErrorPage, RouteErrorPage } from './common/components/ErrorPage';
 import { TopPlaceholderPage } from './common/components/TopPlaceholderPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
+import { PasswordChangePage } from './features/auth/pages/PasswordChangePage';
 import { PasswordResetRequestPage } from './features/auth/pages/PasswordResetRequestPage';
 import { PasswordSetPage } from './features/auth/pages/PasswordSetPage';
 import { CategoryListPage } from './features/equipment/category/pages/CategoryListPage';
@@ -44,6 +45,7 @@ export const routes: RouteObject[] = [
             children: [
               // 仮のトップ画面。S-05・S-07 ができたら、ログイン後の最初の画面（A-03 の homePage）に置き換える
               { index: true, Component: TopPlaceholderPage },
+              { path: 'password-change', Component: PasswordChangePage },
               { path: 'categories', Component: CategoryListPage },
             ],
           },

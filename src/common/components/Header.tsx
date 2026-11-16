@@ -1,7 +1,6 @@
 // 共通ヘッダー（画面設計 1.1、詳細設計 common.md 11.4・11.9）。
-// ログインしているときは、その人の権限で開ける画面のメニュー（menuItems.ts）と、右に氏名を出す。氏名を押すと「ログアウト」を出す。
+// ログインしているときは、その人の権限で開ける画面のメニュー（menuItems.ts）と、右に氏名を出す。氏名を押すと「パスワード変更」（S-04）と「ログアウト」を出す。
 // メニューは、スマートフォンでは「≡」ボタンで開き、PCでは横に並べる。
-// 「パスワード変更」は S-04（ZPOP-106）で、氏名を押したときの中に足す。
 import { useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -130,6 +129,9 @@ export function Header() {
               {me.name}
             </Button>
             <Menu anchorEl={anchor} open={anchor !== null} onClose={() => setAnchor(null)}>
+              <MenuItem component={Link} to="/password-change" onClick={() => setAnchor(null)}>
+                パスワード変更
+              </MenuItem>
               <MenuItem onClick={() => void handleLogout()} disabled={loggingOut}>
                 ログアウト
               </MenuItem>
