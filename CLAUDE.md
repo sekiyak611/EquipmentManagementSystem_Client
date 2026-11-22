@@ -14,6 +14,7 @@
 ## 2. このリポジトリだけの決まり
 
 - 画面・テストの書き方は、`.claude/rules/react.md`（対象のファイルを触ると自動で読み込まれる）。
+- 開発は、工程ごとに MR を出し、マージしてから次へ進む（詳細設計 → 実装 → 単体テスト。共通の決まり 11章、Document の `internaldesign/決まり/開発フロー.md`）。自分の役割は、このフォルダの `.claude/settings.local.json` の `DEV_ROLE`（`junior`・`senior`・`leader`。例は Document の `internaldesign/settings-local/`）。
 - フォルダの分け方は、共通の決まりの 4.3 のとおり（このリポジトリのいちばん上が、4.3 の EquipmentManagementSystem_Client/）。
 - skill の名前の「frontend」（frontend-impl・frontend-test・frontend-review）は、このリポジトリの作業に使うもの（共通の決まり 4.4）。
 - 画面のテスト（Playwright）では、Server も動かして確かめる（Server は同じフォルダに並んだ EquipmentManagementSystem_Server にある）。
