@@ -1,0 +1,99 @@
+# Client の型の確かめと、画面のテスト（Playwright）を、プルリクエストのたびに全件動かす（ZPOP-433）。
+# 画面のテストは Server も使うので、隣に Server（release/main）を取ってきて、テスト用の設定で起動する（playwright.config.ts）。
+# テスト用のデータベースは、この中で MySQL 8.4 を起動して使う。秘密の値は使わない（テスト用のダミーだけ）。
+# 赤なら、マージしない（CLAUDE.md 6章）。
+name: Client test
+
+on:
+  pull_request:
+    branches: [release/main]
+  workflow_dispatch:
+
+# 同じブランチで続けて push したら、古い実行は止める
+concurrency:
+  group: client-test-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Client test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Tokyo
+      # Server の secret.yml の代わり。Spring が環境変数から読む（ダミーの値。この CI の MySQL だけで使う）
+      SPRING_DATASOURCE_USERNAME: equipment
+      SPRING_DATASOURCE_PASSWORD: ci-only-password
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only-root-password
+          MYSQL_DATABASE: equipment_test
+          MYSQL_USER: equipment
+          MYSQL_PASSWORD: ci-only-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pci-only-root-password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # playwright.config.ts が、隣のフォルダ（../EquipmentManagementSystem_Server）で Server を起動するため、そこに置く
+      - name: Server（release/main）を取ってくる
+        uses: actions/checkout@v4
+        with:
+          repository: sekiyak611/EquipmentManagementSystem_Server
+          ref: release/main
+          path: server-checkout
+
+      - name: Server を隣のフォルダに置く
+        run: |
+          # checkout は、作業フォルダの外に置けないので、中に取ってから、隣のフォルダの名前で見えるようにする
+          ln -s "$GITHUB_WORKSPACE/server-checkout" ../EquipmentManagementSystem_Server
+          # Windows で作った gradlew には、実行する権限が付いていないため、付ける
+          chmod +x server-checkout/gradlew
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+          cache-dependency-path: |
+            server-checkout/build.gradle
+            server-checkout/gradle/wrapper/gradle-wrapper.properties
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.12.0'
+          cache: npm
+
+      - name: 部品を入れる
+        run: npm ci
+
+      - name: 型を確かめる
+        run: npm run typecheck
+
+      - name: Playwright のブラウザを入れる
+        run: npx playwright install --with-deps chromium
+
+      - name: 画面のテストを全件動かす
+        run: npx playwright test
+
+      # 失敗したときだけ、結果（レポートと、各テストの最後の画面・操作の記録）を残す
+      - name: 失敗したときの結果を残す
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-test-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
