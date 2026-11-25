@@ -273,10 +273,17 @@ test.describe('S-13 種別管理：権限とメニュー', () => {
     await expect(page.getByRole('heading', { name: '種別管理' })).toBeVisible();
   });
 
-  test('持たない人には、メニューに出ず、開くと権限がない文と「最初の画面へ」が出る', async ({ page }) => {
+  test('持たない人には、メニューに出ず、開くと権限がない文と「最初の画面へ」が出る', async ({ page }, testInfo) => {
     await loginAs(page, 'ippan');
-    // 開ける画面がないので、「≡」も「種別管理」も出ない
-    await expect(page.getByRole('button', { name: 'メニュー' })).toHaveCount(0);
+    // 「自分の備品」（S-05）は開けるが、「種別管理」は出ない（S-05 の実装で、メニューに「自分の備品」が足された）
+    if (testInfo.project.name === 'smartphone') {
+      await page.getByRole('button', { name: 'メニュー' }).click();
+      await expect(page.getByRole('menuitem', { name: '自分の備品' })).toBeVisible();
+      await expect(page.getByRole('menuitem', { name: '種別管理' })).toHaveCount(0);
+      await page.keyboard.press('Escape');
+    } else {
+      await expect(page.getByTestId('header-menu').getByRole('link', { name: '自分の備品' })).toBeVisible();
+    }
     await expect(page.getByRole('link', { name: '種別管理' })).toHaveCount(0);
 
     let listed = false;
