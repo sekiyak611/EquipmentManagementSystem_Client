@@ -16,5 +16,6 @@ export type MenuItemDef = {
 };
 
 export const MENU_ITEMS: MenuItemDef[] = [
+  { label: '自分の備品', path: '/my-equipment', permission: 'LOAN_SELF' },
   { label: '種別管理', path: '/categories', permission: 'CATEGORY_MANAGE' },
 ];

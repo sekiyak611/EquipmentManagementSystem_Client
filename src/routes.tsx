@@ -10,6 +10,7 @@ import { PasswordChangePage } from './features/auth/pages/PasswordChangePage';
 import { PasswordResetRequestPage } from './features/auth/pages/PasswordResetRequestPage';
 import { PasswordSetPage } from './features/auth/pages/PasswordSetPage';
 import { CategoryListPage } from './features/equipment/category/pages/CategoryListPage';
+import { MyEquipmentPage } from './features/equipment/mine/pages/MyEquipmentPage';
 
 /** 開発とテストのときだけ開ける画面（npm run build で組み立てた画面には入らない。common.md 11.7） */
 const devRoutes: RouteObject[] = import.meta.env.DEV
@@ -47,6 +48,7 @@ export const routes: RouteObject[] = [
               { index: true, Component: TopPlaceholderPage },
               { path: 'password-change', Component: PasswordChangePage },
               { path: 'categories', Component: CategoryListPage },
+              { path: 'my-equipment', Component: MyEquipmentPage },
             ],
           },
           ...devRoutes,
