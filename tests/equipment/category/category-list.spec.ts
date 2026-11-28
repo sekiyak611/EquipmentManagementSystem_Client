@@ -298,6 +298,6 @@ test.describe('S-13 種別管理：権限とメニュー', () => {
     // 一覧（K-01）は読まない
     expect(listed).toBe(false);
     await page.getByRole('link', { name: '最初の画面へ' }).click();
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/my-equipment');
   });
 });

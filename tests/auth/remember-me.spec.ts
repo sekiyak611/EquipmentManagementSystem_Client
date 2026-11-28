@@ -1,7 +1,7 @@
 // ログインしたままにする（60日間。画面設計 2章・2.1 の6、詳細設計 auth/S-01_ログイン.md・common.md 3.17。ZPOP-125）
 // 画面（S-01）は、チェックの値を送るだけ。ここでは、ブラウザのクッキーと、セッションが切れたあとの動きを確かめる。
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
-import { DEV_PASSWORD, DEV_USERS } from '../support/login';
+import { DEV_PASSWORD, DEV_USERS, waitForFirstScreen } from '../support/login';
 import { restoreDevPassword } from '../support/passwordLink';
 
 const REMEMBER_COOKIE = 'remember-me';
@@ -18,6 +18,7 @@ async function loginWith(page: Page, user: keyof typeof DEV_USERS, remember: boo
   }
   await page.getByRole('button', { name: 'ログイン', exact: true }).click();
   await expect(page.getByTestId('header-user')).toHaveText(DEV_USERS[user].name);
+  await waitForFirstScreen(page, user);
 }
 
 const cookieOf = async (context: BrowserContext, name: string) =>
@@ -59,7 +60,7 @@ test('チェックを付けた：セッションが切れても、画面を開�
   await page.goto('/');
   await expect(page.getByTestId('header-user')).toHaveText(DEV_USERS.ippan.name);
   // ログイン画面には移らない
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/my-equipment');
   // 自動でログインし直すたびに、合言葉は新しくなる（クッキーの値が変わる）
   const after = await cookieOf(context, REMEMBER_COOKIE);
   expect(after).toBeDefined();

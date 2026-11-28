@@ -160,7 +160,14 @@ for (const redirect of ['%2F%2Fexample.com', '%2F%5Cexample.com', '%2F%09%2Fexam
 }
 
 test('ログインしている人がログイン画面を開くと、最初の画面に移る', async ({ page }) => {
+  // 一般社員の最初の画面は「自分の備品」（/ を開くと /my-equipment に移る。S-05 の詳細設計 1章）
   await loginAs(page, 'ippan');
+  await page.goto('/login');
+  await expect(page).toHaveURL('/my-equipment');
+});
+
+test('総務がログイン画面を開くと、最初の画面（/）に移る（S-07 ができるまでは仮の画面）', async ({ page }) => {
+  await loginAs(page, 'soumu');
   await page.goto('/login');
   await expect(page).toHaveURL('/');
   await expect(page.getByTestId('top-placeholder')).toBeVisible();
