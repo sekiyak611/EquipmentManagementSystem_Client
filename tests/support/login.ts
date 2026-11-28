@@ -17,9 +17,22 @@ export async function fillAndLogin(page: Page, email: string, password: string):
   await page.getByRole('button', { name: 'ログイン', exact: true }).click();
 }
 
+/**
+ * ログインしたあとの最初の画面が出て、読み込みが終わるまで待つ。
+ * 一般社員は、最初の画面（/）が /my-equipment に移り、一覧（B-01）を読む（ZPOP-442）。
+ * その読み込みの途中でテストが先へ進むと、クッキーの読み取りや、API の偽物の差し替えと重なるため。
+ */
+export async function waitForFirstScreen(page: Page, user: keyof typeof DEV_USERS): Promise<void> {
+  if (user === 'ippan') {
+    await expect(page).toHaveURL('/my-equipment');
+    await page.waitForLoadState('networkidle');
+  }
+}
+
 /** ログイン画面を開いてログインし、ヘッダーに氏名が出るまで待つ */
 export async function loginAs(page: Page, user: keyof typeof DEV_USERS): Promise<void> {
   await page.goto('/login');
   await fillAndLogin(page, DEV_USERS[user].email, DEV_PASSWORD);
   await expect(page.getByTestId('header-user')).toHaveText(DEV_USERS[user].name);
+  await waitForFirstScreen(page, user);
 }

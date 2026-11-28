@@ -246,7 +246,7 @@ test('この画面を直接開いて変更したときは、最初の画面（/�
   await openChangePage(page, 'ippan');
   await fillAll(page, DEV_PASSWORD, NEW_PASSWORD);
   await changeButton(page).click();
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/my-equipment');
   await expect(page.getByRole('status')).toHaveText('パスワードを変更しました');
   await expect(page.getByTestId('header-user')).toHaveText(DEV_USERS.ippan.name);
 });
@@ -256,7 +256,7 @@ test('Enter でも変更できる', async ({ page }) => {
   await openChangePage(page);
   await fillAll(page, DEV_PASSWORD, NEW_PASSWORD);
   await confirmField(page).press('Enter');
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/my-equipment');
 });
 
 test('「変更する」を2回続けて押しても、変更の API は1回だけ呼ぶ', async ({ page }) => {
@@ -271,7 +271,7 @@ test('「変更する」を2回続けて押しても、変更の API は1回だ�
   });
   await fillAll(page, DEV_PASSWORD, NEW_PASSWORD);
   await changeButton(page).dblclick();
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/my-equipment');
   expect(count).toBe(1);
 });
 
@@ -285,7 +285,7 @@ test('処理中は「変更する」を押せない', async ({ page }) => {
   await fillAll(page, DEV_PASSWORD, NEW_PASSWORD);
   await changeButton(page).click();
   await expect(changeButton(page)).toBeDisabled();
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/my-equipment');
 });
 
 test('サーバーが入力の誤り（400）を返したら、入力欄の下にサーバーの文を出す（3つの欄）', async ({ page }) => {
