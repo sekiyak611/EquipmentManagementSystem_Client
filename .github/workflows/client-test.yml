@@ -87,6 +87,24 @@ jobs:
       - name: 画面のテストを全件動かす
         run: npx playwright test
 
+      # 失敗したときだけ、失敗したテストの「そのときの画面の状態」と Server のログを、ログに出す。
+      # 記録のファイル（下の client-test-report）をダウンロードしなくても、原因を読めるようにするため
+      - name: 失敗の原因を、ログに出す
+        if: failure()
+        run: |
+          for f in test-results/*/error-context.md; do
+            [ -f "$f" ] || continue
+            echo "::group::$f"
+            head -n 80 "$f"
+            echo "::endgroup::"
+          done
+          for f in server-checkout/logs/*.log; do
+            [ -f "$f" ] || continue
+            echo "::group::$f（最後の 150 行）"
+            tail -n 150 "$f"
+            echo "::endgroup::"
+          done
+
       # 失敗したときだけ、結果（レポートと、各テストの最後の画面・操作の記録）を残す
       - name: 失敗したときの結果を残す
         if: failure()
